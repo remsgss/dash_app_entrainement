@@ -10,8 +10,6 @@ from datetime import datetime
 
 USERNAME_PASSWORD_PAIRS = [['6fois7','mdp']]
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
 #-------------------------------------------------------------------------------
 # IMPORT DONNEES
 df = pd.read_csv('df_nb_connections_sites.csv',sep=";")
@@ -48,6 +46,7 @@ def graph1_liste_date_imp_grah(dates_imp,min_,max_):
 
 # pour tracer un graph selon  le type du consultant
 def graph3_infos_consultant_offre_(profils_consultants):
+    fig = {}
     if len(profils_consultants)==1:
         profil_ = profils_consultants[0]
         if df2[profil_].dtypes == 'O':
@@ -65,32 +64,9 @@ def graph3_infos_consultant_offre_(profils_consultants):
                 'data':[go.Histogram(x=df2[profil_])],
                 'layout':go.Layout(title='Informations selon la variable : {}'.format(profil_))
             }
-    elif len(profils_consultants)==2 and df2.loc[:,profils_consultants].dtypes.tolist().count('int64') == 2:
-        fig={
-            'data':[go.Scatter(
-                        x=df2[profils_consultants[0]],
-                        y=df2[profils_consultants[1]],
-                        mode='markers'
-                    )],
-            'layout':go.Layout(title='Informations selon la variable '+profils_consultants[0]+' et la variable '+profils_consultants[1])
-        }
-    elif len(profils_consultants)==2 and df2.loc[:,profils_consultants].dtypes.tolist().count('int64') == 1:
-        if df2[profils_consultants[0]].dtypes == 'int64':
-            x_ = df2[profils_consultants[1]].unique()
-            y_ = df2.groupby([profils_consultants[1]]).mean()[profils_consultants[0]]
-        else:
-            x_ = df2[profils_consultants[0]].unique()
-            y_ = df2.groupby([profils_consultants[0]]).mean()[profils_consultants[1]]
-        fig = {
-            'data':[go.Bar(
-                        x=x_, y=y_
-                    )],
-            'layout':go.Layout(title='Informations selon la variable '+profils_consultants[0]+' et la variable '+profils_consultants[1])
-        }
-    elif 'int64' not in  df2.loc[:,profils_consultants].dtypes.tolist():
-        fig = px.sunburst(df2, path=profils_consultants)
     else:
-        fig = {}
+        if 'int64' not in  df2.loc[:,profils_consultants].dtypes.tolist():
+            fig = px.sunburst(df2, path=profils_consultants)
 
     return fig
 
@@ -98,9 +74,10 @@ def graph3_infos_consultant_offre_(profils_consultants):
 #-------------------------------------------------------------------------------
 # APPLICATION
 # ouverture de l'appli
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash()
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
 server = app.server
+
 
 # app layout
 app.layout = html.Div([
@@ -138,7 +115,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='g1_select_dates_imp',
                 options=[{'label': i, 'value': i} for i in dates_importantes],
-                value=[],
+                value=[dates_importantes[0]],
                 multi=True,
                 style={'margin':'10','fontsize':'8'}
             )
@@ -278,6 +255,8 @@ def graph1_mise_a_jour_graph(n_clicks,select_media_web,start_date,end_date,dates
     [Input('g3_select_profil_consultants', 'value')])
 def graph3_infos_consultant_offre(profils_consultants):
     return  graph3_infos_consultant_offre_(profils_consultants)
+
+
 
 
 #-------------------------------------------------------------------------------
