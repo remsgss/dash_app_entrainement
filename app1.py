@@ -63,7 +63,7 @@ nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_dat
 # ouverture de l'appli
 app = dash.Dash(__name__)
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
-
+server = app.server
 
 # app layout
 app.layout = html.Div([
