@@ -58,7 +58,7 @@ dates_fichiers_interet = [str.strip('./data/extraction_fb_'+nom_page+'_preproces
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
 max_date = max(dates_fichiers_interet)
 
-df_fb = pd.read_csv('.\\data\\extraction_fb_'+nom_page+'_preprocesse_'+max_date.strftime("%b-%d-%Y")+'.csv')
+df_fb = pd.read_csv('./data/extraction_fb_'+nom_page+'_preprocesse_'+max_date.strftime("%b-%d-%Y")+'.csv')
 
 text_p1_g3 = '''
     Le graphique ci dessous permet d'illustrer les profils des utilisateurs ayant consulté **l'offre de 100€** selon les modalités de différentes variables.
