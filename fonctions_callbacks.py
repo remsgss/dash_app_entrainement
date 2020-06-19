@@ -33,19 +33,15 @@ features2 = df2.columns.drop(['id'])
 username = 'LesCharentes'
 
 fichiers_chemin_donnees = glob.glob("./data/*.xlsx")
-print(fichiers_chemin_donnees,'\n')
 fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\df_tweets_'+username)]
-print(fichiers_interet,'\n')
-dates_fichiers_interet = [str.strip('.\\data\\df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
-print(dates_fichiers_interet,'\n')
+dates_fichiers_interet = [str.strip('./data/df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
-print(dates_fichiers_interet,'\n')
 max_date = max(dates_fichiers_interet)
 del(fichiers_chemin_donnees,fichiers_interet,dates_fichiers_interet)
 
-df_tweets = pd.read_excel('.\\data\\df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+df_tweets = pd.read_excel('./data/df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 df_tweets.loc[:,'hashtags'] = df_tweets.loc[:,'hashtags'].apply(lambda x: literal_eval(x))
-nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+nb_retweet_hashtags = pd.read_excel('./data/nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 
 ##################################################################################################
 ##################################################################################################
