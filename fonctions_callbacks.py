@@ -32,7 +32,7 @@ features2 = df2.columns.drop(['id'])
 # import extractions tweets
 username = 'LesCharentes'
 
-fichiers_chemin_donnees = glob.glob(".\\data\\*.xlsx")
+fichiers_chemin_donnees = glob.glob("./data/*.xlsx")
 print(fichiers_chemin_donnees,'\n')
 fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\df_tweets_'+username)]
 print(fichiers_interet,'\n')
