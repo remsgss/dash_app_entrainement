@@ -286,7 +286,7 @@ analyse_facebook = html.Div([
                                                         'line': {'width': 0.5, 'color': 'white'}
                                                     }
                                                 ) for col in ['nb_reactions','nb_jadore','nb_jaime'] ],
-                                    'layout' : go.Layout(title='Réactions au cours du temps')
+                                    'layout' : go.Layout(title='Réactions au cours du temps',plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
                                 }),
                 ],className="pretty_container _l100"
             )

@@ -65,7 +65,6 @@ app = dash.Dash(__name__)
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
 server = app.server
 
-
 # app layout
 app.layout = html.Div([
 

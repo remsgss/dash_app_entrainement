@@ -91,7 +91,8 @@ def p1_g1_mise_a_jour_(n_clicks,select_media_web,start_date,end_date,dates_imp):
                 title='Nombre de visites par média',
                 xaxis= {'automargin': True, 'title': 'Date'},
                 yaxis= {'automargin': True, 'title': 'Nombre de visites'},
-                legend={'font':{'size':12}}
+                legend={'font':{'size':12}},
+                plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9"
             ),
 
         }
@@ -117,7 +118,8 @@ def p1_g2_mise_a_jour_(n_clicks,start_date,end_date,dates_imp):
         'layout': go.Layout(
             title='Type de réservation au cours du temps (pct)',
             xaxis= {'title': 'date'},
-            yaxis= {'title': 'Type d\'hébergement','range':[0, 1]}
+            yaxis= {'title': 'Type d\'hébergement','range':[0, 1]},
+            plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9"
         )
     }
     return figure
@@ -134,12 +136,12 @@ def p1_g3_mise_a_jour_(profils_consultants):
                         labels=count_y.index.values,
                         hole=.4
                         )],
-                'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable : {}'.format(profil_))
+                'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable : {}'.format(profil_),plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
             }
         elif df2[profil_].dtypes == 'int64':
             fig={
                 'data':[go.Histogram(x=df2[profil_])],
-                'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable : {}'.format(profil_))
+                'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable : {}'.format(profil_),plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
             }
     elif len(profils_consultants)==2 and df2.loc[:,profils_consultants].dtypes.tolist().count('int64') == 2:
         fig={
@@ -148,7 +150,7 @@ def p1_g3_mise_a_jour_(profils_consultants):
                         y=df2[profils_consultants[1]],
                         mode='markers'
                     )],
-            'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable '+profils_consultants[0]+' et la variable '+profils_consultants[1])
+            'layout':go.Layout(title='Profils des consultants de l\'offre selon la variable '+profils_consultants[0]+' et la variable '+profils_consultants[1],plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
         }
     elif len(profils_consultants)==2 and df2.loc[:,profils_consultants].dtypes.tolist().count('int64') == 1:
         if df2[profils_consultants[0]].dtypes == 'int64':
@@ -165,7 +167,7 @@ def p1_g3_mise_a_jour_(profils_consultants):
             'data':[go.Bar(
                         x=x_, y=y_
                     )],
-            'layout':go.Layout(title='Profils des consultants de l\'offre : moyenne de '+var_moy+' par '+ var_abscisse)
+            'layout':go.Layout(title='Profils des consultants de l\'offre : moyenne de '+var_moy+' par '+ var_abscisse,plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
         }
     elif len(profils_consultants)==3 and df2.loc[:,profils_consultants].dtypes.tolist().count('int64') == 1 and df2.loc[:,profils_consultants].dtypes.tolist().count('O') ==2 :
         df2_ = df2.drop('id',axis=1)
@@ -183,7 +185,7 @@ def p1_g3_mise_a_jour_(profils_consultants):
                             name=val_cat_leg,
                         ) for val_cat_leg in  df_.loc[:,var_cat.columns[1]].unique()
                      ] ,
-            'layout' : go.Layout(title='Profils des consultants de l\'offre : moyenne de ' + var_int.columns[0] + ' par ' + var_cat.columns[0] + ' et ' + var_cat.columns[1])
+            'layout' : go.Layout(title='Profils des consultants de l\'offre : moyenne de ' + var_int.columns[0] + ' par ' + var_cat.columns[0] + ' et ' + var_cat.columns[1],plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
         }
     elif len(profils_consultants)==2 and 'int64' not in  df2.loc[:,profils_consultants].dtypes.tolist():
         fig = px.sunburst(df2, path=profils_consultants)
