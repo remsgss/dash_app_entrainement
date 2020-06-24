@@ -2,7 +2,9 @@
   background-color: #f2f2f2;
   margin-left: 5%;
   margin-right: 5%;
-  font-family: 'Open Sans', sans-serif !important;
+  font-family: "Open Sans", sans-serif;
+  height: 90vh;
+  width: 90vw;
 }
 
 
@@ -13,17 +15,26 @@
   flex-direction: column;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.title {
+    font-family: serif;
+}
+
 .pretty_container {
   border-radius: 5px;
   background-color: #f9f9f9;
   margin: 10px;
   padding: 10px;
-  position: relative;
+  /*position: relative;*/
   box-shadow: 2px 2px 2px lightgrey;
 }
 
 .flex-display {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .flex-start-display{
@@ -35,60 +46,61 @@
 	font-size : 24px ;
  }
 
- ._l1{
+
+  ._l20{
+     /*flex-grow: 1;*/
+     width:18%;
+     /*flex-shrink: 1;*/
+  }
+
+ ._l25{
     flex-grow: 1;
-    flex-basis: 0;
-    flex-shrink: 1;
+    width:22.5%;
+    /*flex-shrink: 1;*/
  }
 
- ._l1_{
-    flex-grow: 1.5;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l33{
+    /*flex-grow: 1;*/
+    width: 29.99%;
+    /*flex-shrink: 1;*/
  }
 
- ._l2{
-    flex-grow: 2;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l50{
+    flex-grow: 1;
+    width: 45%;
+    /*flex-shrink: 1;*/
  }
 
- ._l2_{
-    flex-grow: 2.5;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l66{
+    /*flex-grow: 1;*/
+    width:59.99%;
+    /*flex-shrink: 1;*/
  }
 
- ._l3{
-    flex-grow: 3;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l75{
+    flex-grow: 1;
+    width: 67.5%;
+  /*  flex-shrink: 1;*/
  }
 
- ._l3_{
-    flex-grow: 3.5;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l80{
+    /*flex-grow: 1;*/
+    width:72%;
+    /*flex-shrink: 1;*/
  }
 
- ._l4{
-    flex-grow: 4;
-    flex-basis: 0;
-    flex-shrink: 1;
+ ._l100{
+    /*flex-grow: 1;*/
+    width:100%;
+    /*flex-shrink: 1;*/
+ }
+
+ ._l_grow{
+    flex-grow: 1;
  }
 
 
-.header-title {
-  background-color: #8f84ae;
-  width : 100%;
-  /*padding: 4%;*/
-  padding-top: 0px;
-  padding-bottom: 0rem;
-  font-size: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+
 
 
  /*----------------------------------------------------------------------------*/
@@ -113,8 +125,8 @@
  }
 
 .markdown{
-    font-size : 8px;
     text-align: justify;
+    font-size: 1.5em;
  }
 
 
@@ -134,4 +146,4 @@ h4 { font-size: 2.6rem; line-height: 1.35; letter-spacing: -.08rem; margin-botto
 h5 { font-size: 2.2rem; line-height: 1.5;  letter-spacing: -.05rem; margin-bottom: 0.6rem; margin-top: 0.6rem;}
 h6 { font-size: 2.0rem; line-height: 1.6;  letter-spacing: 0; margin-bottom: 0.75rem; margin-top: 0.75rem;}
 
-p { margin-top: 0; font-size: 2.0rem}
+p { margin-top: 0; font-size: 1.5em;}
