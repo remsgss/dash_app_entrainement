@@ -17,8 +17,6 @@ import datetime as dt
 from ast import literal_eval
 import os
 
-import base64
-
 df = pd.read_csv('./data/df_nb_connections_sites.csv',sep=";")
 df['date'] = pd.to_datetime(df['date'],format='%d/%m/%Y')
 features = df.columns.drop(['date','Dates Importantes'])
@@ -34,29 +32,16 @@ features2 = df2.columns.drop(['id'])
 # import extractions tweets
 username = 'LesCharentes'
 
-fichiers_chemin_donnees = glob.glob(".\\data\\*.xlsx")
-fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\df_tweets_'+username)]
-dates_fichiers_interet = [str.strip('.\\data\\df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
+fichiers_chemin_donnees = glob.glob("./data/*.xlsx")
+fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('./data/df_tweets_'+username)]
+dates_fichiers_interet = [str.strip('./data/df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
 max_date = max(dates_fichiers_interet)
 del(fichiers_chemin_donnees,fichiers_interet,dates_fichiers_interet)
 
-df_tweets = pd.read_excel('.\\data\\df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+df_tweets = pd.read_excel('./data/df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 df_tweets.loc[:,'hashtags'] = df_tweets.loc[:,'hashtags'].apply(lambda x: literal_eval(x))
-nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
-
-nom_page='tourismecharentes'
-fichiers_chemin_donnees = glob.glob(".\\data\\*.csv")
-fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\extraction_fb_'+nom_page+'_preprocesse_')]
-dates_fichiers_interet = [str.strip('.\\data\\extraction_fb_'+nom_page+'_preprocesse_').strip('.csv') for str in fichiers_interet]
-dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
-max_date = max(dates_fichiers_interet)
-df_fb = pd.read_csv('.\\data\\extraction_fb_'+nom_page+'_preprocesse_'+max_date.strftime("%b-%d-%Y")+'.csv')
-
-
-def encode_image(image_file):
-    encoded = base64.b64encode(open(image_file, 'rb').read())
-    return 'data:image/png;base64,{}'.format(encoded.decode())
+nb_retweet_hashtags = pd.read_excel('./data/nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 
 ##################################################################################################
 ##################################################################################################
@@ -213,6 +198,58 @@ def p1_g3_mise_a_jour_(profils_consultants):
 #-------------------------------------------------------------------------------------------------
 # FONCTIONS PAGE 2
 
+# nuage de mot
+def p2_g_mise_a_jour_(text):
+    wc = WordCloud(stopwords = set(STOPWORDS),
+                   max_words = 200,
+                   max_font_size = 100)
+    wc.generate(text)
+
+    word_list=[]
+    freq_list=[]
+    fontsize_list=[]
+    position_list=[]
+    orientation_list=[]
+    color_list=[]
+
+    for (word, freq), fontsize, position, orientation, color in wc.layout_:
+        word_list.append(word)
+        freq_list.append(freq)
+        fontsize_list.append(fontsize)
+        position_list.append(position)
+        orientation_list.append(orientation)
+        color_list.append(color)
+
+    # get the positions
+    x=[]
+    y=[]
+    for i in position_list:
+        x.append(i[0])
+        y.append(i[1])
+
+    # get the relative occurence frequencies
+    new_freq_list = []
+    for i in freq_list:
+        new_freq_list.append(i*100)
+    new_freq_list
+
+    trace = go.Scatter(x=x,
+                       y=y,
+                       textfont = dict(size=new_freq_list,
+                                       color=color_list),
+                       hoverinfo='text',
+                       hovertext=['{0}{1}'.format(w, f) for w, f in zip(word_list, freq_list)],
+                       mode='text',
+                       text=word_list
+                      )
+
+    layout = go.Layout({'xaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False},
+                        'yaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False}})
+
+    fig = go.Figure(data=[trace], layout=layout)
+
+    return fig
+
 def p2_t1_t2_dropdown_mise_a_jour_(value_input):
     df_ = nb_retweet_hashtags.loc[nb_retweet_hashtags['COUNT']>=value_input,:]
     df_ = df_.sort_values(by=['retweet_count'],ascending=False)
@@ -227,11 +264,14 @@ def p2_t1_nb_retweet_mise_a_jour_(value_input):
     df_.retweet_count = df_.retweet_count.round(1)
 
     return dasht.DataTable(
-        id="p2_t1_tweets",
+        id="table",
         sort_action="native",
-        #filter_action="native",
-        #row_selectable='single',
-        #selected_rows=[],
+        # filter_action="native",
+        #row_deletable=True,
+        row_selectable='single',
+        # css={
+        #     "rule": "display: inline; white-space: inherit; overflow: inherit; text-overflow: inherit;"
+        # },
         style_data={"whiteSpace": "normal"},
         style_cell={
             "padding": "10px",
@@ -240,12 +280,13 @@ def p2_t1_nb_retweet_mise_a_jour_(value_input):
             "border": "white",
             'fontSize':20,
         },
-        columns=[{"name": 'Hashtags', "id": 'hashtags'},{"name": 'Nombre de retweet', "id": 'retweet_count'}],
+        columns=[{"name": 'hashtags', "id": 'hashtags'},{"name": 'retweet_count', "id": 'retweet_count'}],
         data=df_.to_dict("rows"),
         page_size=6
     )
 
 def p2_t2_tweets_par_hashtags_mise_a_jour_(value_input):
+
     df_ = df_tweets.loc[:,("date", "text","retweet_count","hashtags")]
 
     selection = [value_input]
@@ -255,7 +296,7 @@ def p2_t2_tweets_par_hashtags_mise_a_jour_(value_input):
     df_['hashtags'] = [' '.join(map(str, l)) for l in df_['hashtags']]
 
     return dasht.DataTable(
-        id="p2_t2_tweets",
+        id="table",
         sort_action="native",
         #filter_action="native",
         #row_deletable=True,
@@ -279,27 +320,3 @@ def p2_t2_tweets_par_hashtags_mise_a_jour_(value_input):
         data=df_.to_dict("rows"),
         page_size=10
     )
-
-def affichage_post_fb_(input_value):
-    if input_value:
-        df_ = pd.DataFrame(df_fb.iloc[input_value['points'][0]['pointNumber'],:]).transpose()
-        df_ = pd.DataFrame(df_['Post'])
-        return dasht.DataTable(
-            id="p2_t3_fb",
-            sort_action="native",
-            style_data={"whiteSpace": "normal"},
-            style_cell={
-                "padding": "10px",
-                "midWidth": "0px",
-                "textAlign": "center",
-                "border": "white",
-                'fontSize':20,
-            },
-            columns=[{"name": i, "id": i} for i in df_.columns],
-            data=df_.to_dict("rows"),
-            page_size=6
-        )
-
-def affichage_image_fb_(input_value):
-    if input_value:
-        return df_fb.loc[input_value['points'][0]['pointNumber'],'Image']

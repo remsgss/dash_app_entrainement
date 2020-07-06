@@ -42,16 +42,16 @@ features2 = df2.columns.drop(['id'])
 # import extractions tweets
 username = 'LesCharentes'
 
-fichiers_chemin_donnees = glob.glob(".\\data\\*.xlsx")
-fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\df_tweets_'+username)]
-dates_fichiers_interet = [str.strip('.\\data\\df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
+fichiers_chemin_donnees = glob.glob("./data/*.xlsx")
+fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('./data/df_tweets_'+username)]
+dates_fichiers_interet = [str.strip('./data/df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
 max_date = max(dates_fichiers_interet)
 del(fichiers_chemin_donnees,fichiers_interet,dates_fichiers_interet)
 
-df_tweets = pd.read_excel('.\\data\\df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+df_tweets = pd.read_excel('./data/df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 df_tweets.loc[:,'hashtags'] = df_tweets.loc[:,'hashtags'].apply(lambda x: literal_eval(x))
-nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+nb_retweet_hashtags = pd.read_excel('./data/nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 
 
 
@@ -62,19 +62,8 @@ nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_dat
 ######################################### APPLICATION ############################################
 # ouverture de l'appli
 app = dash.Dash(__name__)
-auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS
+auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
 server = app.server
-
-layout = dict(
-    autosize=True,
-    automargin=True,
-    margin=dict(l=30, r=30, b=20, t=40),
-    hovermode="closest",
-    plot_bgcolor="#F9F9F9",
-    paper_bgcolor="#F9F9F9",
-    legend=dict(font=dict(size=10), orientation="h"),
-    title="Satellite Overview",
-    ),
 
 
 # app layout
@@ -152,6 +141,20 @@ def p1_g2_mise_a_jour(n_clicks,start_date,end_date,dates_imp):
 def p1_g3_mise_a_jour(profils_consultants):
     return  fonctions_callbacks.p1_g3_mise_a_jour_(profils_consultants)
 
+# @app.callback(
+#     Output('p2_g','figure'),
+#     [
+#         Input('p1_t1_t2_input','value')
+#     ]
+# )
+# def p2_g_mise_a_jour(value_input):
+#     df_ = nb_retweet_hashtags.loc[nb_retweet_hashtags['COUNT']>=value_input,:]
+#
+#     hashtags = [tag for tag in df_['hashtags']]
+#     hashtags = ' '.join(hashtags)
+#     fig = dashboard_fonctions.p2_g_mise_a_jour_(hashtags)
+#     return fig
+
 @app.callback(
     Output('p2_t1_t2_dropdown','options'),
     [
@@ -170,41 +173,15 @@ def p2_t1_t2_dropdown_mise_a_jour(value_input):
 def p2_t1_nb_retweet_mise_a_jour(value_input):
     return fonctions_callbacks.p2_t1_nb_retweet_mise_a_jour_(value_input)
 
-# @app.callback(
-#     Output('p2_t2_tweets_par_hashtags','children'),
-#     [
-#         Input('p2_t1_t2_dropdown','value')
-#     ]
-# )
-# def p2_t2_tweets_par_hashtags_mise_a_jour(value_input):
-#     return fonctions_callbacks.p2_t2_tweets_par_hashtags_mise_a_jour_(value_input)
-
 @app.callback(
     Output('p2_t2_tweets_par_hashtags','children'),
     [
-        Input('p2_t1_tweets', 'active_cell'),
-        Input('p2_t1_tweets', 'derived_viewport_data'),
+        Input('p2_t1_t2_dropdown','value')
     ]
 )
-def p2_t1_selected_cell(active_cell,derived_virtual_data):
-    if active_cell:
-        df = pd.DataFrame(derived_virtual_data)
-        if active_cell['column'] == 0 :
-            return fonctions_callbacks.p2_t2_tweets_par_hashtags_mise_a_jour_(df.iloc[active_cell['row'],active_cell['column']])
+def p2_t2_tweets_par_hashtags_mise_a_jour(value_input):
+    return fonctions_callbacks.p2_t2_tweets_par_hashtags_mise_a_jour_(value_input)
 
-@app.callback(
-        Output('p2_t3_post_fb', 'children'),
-        [Input('p2_fb_g1_nb_reactions', 'clickData')]
-)
-def affichage_post_fb(input_value):
-    return fonctions_callbacks.affichage_post_fb_(input_value)
-
-@app.callback(
-        Output('p2_t3-image', 'src'),
-        [Input('p2_fb_g1_nb_reactions', 'clickData')]
-)
-def affichage_image_fb(input_value):
-    return fonctions_callbacks.affichage_image_fb_(input_value)
 #-------------------------------------------------------------------------------
 # INDEX
 @app.callback(dash.dependencies.Output('page-content', 'children'),

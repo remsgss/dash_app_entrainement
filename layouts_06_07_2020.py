@@ -35,26 +35,26 @@ features2 = df2.columns.drop(['id'])
 # import extractions tweets
 username = 'LesCharentes'
 
-fichiers_chemin_donnees = glob.glob(".\\data\\*.xlsx")
-fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\df_tweets_'+username)]
-dates_fichiers_interet = [str.strip('.\\data\\df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
+fichiers_chemin_donnees = glob.glob("./data/*.xlsx")
+fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('./data/df_tweets_'+username)]
+dates_fichiers_interet = [str.strip('./data/df_tweets_'+username).strip('.xlsx') for str in fichiers_interet]
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
 max_date = max(dates_fichiers_interet)
 del(fichiers_chemin_donnees,fichiers_interet,dates_fichiers_interet)
 
-df_tweets = pd.read_excel('.\\data\\df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+df_tweets = pd.read_excel('./data/df_tweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 df_tweets.loc[:,'hashtags'] = df_tweets.loc[:,'hashtags'].apply(lambda x: literal_eval(x))
-nb_retweet_hashtags = pd.read_excel('.\\data\\nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
+nb_retweet_hashtags = pd.read_excel('./data/nb_retweets_'+username+'_'+max_date.strftime("%b-%d-%Y")+'.xlsx')
 
 
 nom_page='tourismecharentes'
-fichiers_chemin_donnees = glob.glob(".\\data\\*.csv")
-fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('.\\data\\extraction_fb_'+nom_page+'_preprocesse_')]
-dates_fichiers_interet = [str.strip('.\\data\\extraction_fb_'+nom_page+'_preprocesse_').strip('.csv') for str in fichiers_interet]
+fichiers_chemin_donnees = glob.glob("./data/*.csv")
+fichiers_interet = [str for str in fichiers_chemin_donnees if str.startswith('./data/extraction_fb_'+nom_page+'_preprocesse_')]
+dates_fichiers_interet = [str.strip('./data/extraction_fb_'+nom_page+'_preprocesse_').strip('.csv') for str in fichiers_interet]
 dates_fichiers_interet = [dt.datetime.strptime(date, "%b-%d-%Y").date() for date in dates_fichiers_interet]
 max_date = max(dates_fichiers_interet)
 
-df_fb = pd.read_csv('.\\data\\extraction_fb_'+nom_page+'_preprocesse_'+max_date.strftime("%b-%d-%Y")+'.csv')
+df_fb = pd.read_csv('./data/extraction_fb_'+nom_page+'_preprocesse_'+max_date.strftime("%b-%d-%Y")+'.csv')
 
 text_p1_g3 = '''
     Le graphique ci dessous permet d'illustrer les profils des utilisateurs ayant consulté **l'offre de 100€** selon les modalités de différentes variables.
@@ -255,7 +255,7 @@ analyse_hashtags_twitter = html.Div([
     html.Div(
         [
             html.Div([
-                    #dcc.Dropdown(id='p2_t1_t2_dropdown',className="dcc_control"),
+                    dcc.Dropdown(id='p2_t1_t2_dropdown',className="dcc_control"),
                     html.Div(id='p2_t2_tweets_par_hashtags')
                 ]
                 ,className="pretty_container _l_grow"
@@ -289,21 +289,7 @@ analyse_facebook = html.Div([
                                     'layout' : go.Layout(title='Réactions au cours du temps',plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9")
                                 }),
                 ],className="pretty_container _l100"
-            ),
-            html.Div(
-                [
-
-                    html.Div(
-                        html.Img(id='p2_t3-image',height=300),
-                        style={"text-align": "center"},
-                        className="_l25"
-                    ),
-                    html.Div(id='p2_t3_post_fb',className="_l66",style={"text-align": "center" }),
-
-                ],className="pretty_container _l100 "
-                ,style={"display": "flex","flex-direction": "row" }
-            ),
-
+            )
         ]
         ,className="row flex-display"
     ),
